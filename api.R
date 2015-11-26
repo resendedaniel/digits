@@ -1,6 +1,6 @@
 readImg <- function(row) {
     # Read a single line of 28x28 matrix character
-    t(matrix(unlist(row[-1]), 28))
+    matrix(unlist(row[-1]), 28)
 }
 
 plotImg <- function(img) {
@@ -12,6 +12,7 @@ plotImg <- function(img) {
     
     ggplot(df, aes(row, col, size=value, alpha=value/255)) + 
         geom_point(shape=16) + 
+        scale_size(range=c(1,3)) +
         xlab("") + ylab("") +
         theme_bw() + 
         theme(legend.position='none')
