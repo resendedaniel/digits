@@ -5,7 +5,7 @@ date: "November 25, 2015"
 output: html_document
 runtime: shiny
 ---
-```{r libraries, echo=FALSE}
+```{r libraries, echo=FALSE, message=FALSE, warning=FALSE}
 source('source.R')
 ```
 This is the first try to build a Machine Learning algorithm to discover handwriting digits.
