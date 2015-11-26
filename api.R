@@ -1,6 +1,6 @@
 readImg <- function(row) {
     # Read a single line of 28x28 matrix character
-    matrix(unlist(row[-1]), 28)
+    t(matrix(unlist(row[-1]), 28))
 }
 
 plotImg <- function(img) {

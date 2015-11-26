@@ -1,43 +1,43 @@
 source('source.R')
-char <- 1
-n <- 50
+
+# Parameters
+breaks <- 3
 
 train <- read.csv("data/train.csv")
+# test <- read.csv("data/test.csv", nrows=1000)
 
-row <- sample_n(train, 1)
-img <- readImg(row)
-img
-plotImg(img)
-row$label
-sum(apply(img, 1, mean) > 10) / sum(apply(img, 2, mean) > 10)
-# plotSample(train, n=9, 4)
-
-ave <- sapply(0:9, function(char) {
-    averageImg(train, char)
-}, simplify=FALSE)
-
-sample <- sample_n(train, n)
-
-count <- 0
-prediction <- apply(sample, 1, function(row) {
-    print(count)
-    count <<- count + 1
-    img <- readImg(row)
-    x <- unlist(lapply(ave, function(a) {
-        abs(mean(unlist(matrix((img+1) / (a+1)))))
-    }))
+x <- apply(train, 1, function(row) {
+    matrix <- readImg(row)
+    chunks <- ceiling((1:28)/(28/breaks))
     
-    predict <- which.min(x) - 1
+    rowMeans <- rowMeans(matrix)
+    rowMeans <- split(rowMeans, paste0("rows_", chunks))
+    chunkRowMeans <- lapply(rowMeans, mean)
+    names(chunkRowMeans) <- paste0("mean_", names(chunkRowMeans))
+    chunkRowMeans <- data.frame(chunkRowMeans)
+    chunkRowSd <- lapply(rowMeans, sd)
+    names(chunkRowSd) <- paste0("sd_", names(chunkRowSd))
+    chunkRowSd <- data.frame(chunkRowSd)
     
-    g <- plotImg(img) + ggtitle(ifelse(row[1] == predict,
-                                       paste0("Yey! ", predict),
-                                       paste0("Noo!, ", predict)))
-    print(g)
+    colMeans <- colMeans(matrix)
+    colMeans <- split(colMeans, paste0("cols_", chunks))
+    chunkColMeans <- lapply(colMeans, mean)
+    names(chunkColMeans) <- paste0("mean_", names(chunkColMeans))
+    chunkColMeans <- data.frame(chunkColMeans)
+    chunkColSd <- lapply(colMeans, sd)
+    names(chunkColSd) <- paste0("sd_", names(chunkColSd))
+    chunkColSd <- data.frame(chunkColSd)
     
-    predict
+    data.frame(chunkRowMeans, chunkRowSd, chunkColMeans, chunkColSd)
 })
+x <- do.call(rbind, x)
+x$label <- factor(train$label)
 
-paste0(mean(sample$label == prediction) * 100, "%")
+# model <- train(label ~., data=train, method="rf")
+t <- proc.time()
+model <- randomForest(label ~ ., data=x, ntrees=1000)
+model
+print(proc.time() - t)
 
-plotImg(readImg(ave[[9]]))
+# predict(model, newdata=test)
 
