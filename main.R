@@ -2,13 +2,14 @@ print("loading libraries")
 source('source.R')
 
 # Parameters
-breaks <- 3
+breaks <- 5
 
 print("reading data")
 train <- read.csv("data/train.csv")
 # test <- read.csv("data/test.csv", nrows=1000)
 
 print("generating features")
+n <- nrow(train)
 count <- 1
 x <- apply(train, 1, function(row) {
     matrix <- readImg(row)
@@ -65,7 +66,9 @@ x <- apply(train, 1, function(row) {
     names(chunkColKurt) <- paste0("kurt_", names(chunkColKurt))
     chunkColKurt <- data.frame(chunkColKurt)
     
-    print(count)
+    if(count %in% round(seq(1, n, length.out=100))) {
+        cat(paste0(round(count/n * 100), "% "))
+    }
     count <<- count + 1
     
     data.frame(aspectRatio,
@@ -80,7 +83,7 @@ x <- apply(train, 1, function(row) {
 })
 x <- do.call(rbind, x)
 x[sapply(x, is.nan)] <- 0
-x$label <- factor(train$label)
+x <- data.frame(label=factor(train$label), x)
 
 print("machine learning")
 t <- proc.time()
@@ -89,5 +92,9 @@ model
 print(proc.time() - t)
 
 save(model, file="data/model.rda")
+
+wrong <- train[model$predict != x$label,]
+
+beep(4)
 # predict(model, newdata=test)
 
