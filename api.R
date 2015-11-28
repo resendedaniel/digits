@@ -1,3 +1,10 @@
+readData <- function() {
+    print("reading data")
+    
+    train <- read.csv("data/train.csv")
+    # test <- read.csv("data/test.csv", nrows=1000)
+}
+
 readImg <- function(row) {
     # Read a single line of 28x28 matrix character
     matrix(unlist(row[-1]), 28)

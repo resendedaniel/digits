@@ -12,4 +12,6 @@
 vignettes/*.html
 vignettes/*.pdf
 
+# Data
+*.RData
 *.rda
