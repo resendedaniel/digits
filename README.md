@@ -8,9 +8,10 @@ I rekon that I barely undertand the concept of Kurtosis. The fun of machine lear
 
 The system calculates its variables for each row and create a new data frame of features. It binds the label and is passed trough a randomForest.
 
-No parameters are set yet. The most I did wwas make some changes on ntree. It shows improvement, but not meaningfull to worth the brute force. There is a higher asymptote.
+No parameters are set yet. The most I did wwas make some changes on ntree. It shows improvement as it increases, but not meaningfull to worth the brute force. There is a high asymptote.
 
-Now I am doing some experiments with diferents break numbers. I will let it processing overnight. In small samples indicates that around 4 breaks the second derivative slows, so that might be a good break point.
+I also tried different breaks and checked the error rate for each one. It seems there isn't many differences in split the image of more than 4 breaks. And as the image is more fragmented, more processor time is taken. You can see in the char the error rate against numbers of breaks.
+![Error rate by break](data/error_by_breaks.png)
 
 It's a little bit messy yet, but I pretend to work some more, but it can me delayed. I am kind of busy trying to set up the first robo advisor in my country.
 

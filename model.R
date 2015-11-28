@@ -21,10 +21,10 @@ generateFeatures <- function(train, breaks=3) {
         names(chunkRowMeans) <- paste0("mean_", names(chunkRowMeans))
         chunkRowMeans <- data.frame(chunkRowMeans)
         
-        ## Sd
-        chunkRowSd <- lapply(rowMeans, sd)
-        names(chunkRowSd) <- paste0("sd_", names(chunkRowSd))
-        chunkRowSd <- data.frame(chunkRowSd)
+        ## Var
+        chunkRowVar <- lapply(rowMeans, var)
+        names(chunkRowVar) <- paste0("var_", names(chunkRowVar))
+        chunkRowVar <- data.frame(chunkRowVar)
         
         ## Skew
         chunkRowSkew <- lapply(rowMeans, skewness)
@@ -42,10 +42,10 @@ generateFeatures <- function(train, breaks=3) {
         names(chunkColMeans) <- paste0("mean_", names(chunkColMeans))
         chunkColMeans <- data.frame(chunkColMeans)
         
-        ## Sd
-        chunkColSd <- lapply(colMeans, sd)
-        names(chunkColSd) <- paste0("sd_", names(chunkColSd))
-        chunkColSd <- data.frame(chunkColSd)
+        ## Var
+        chunkColVar <- lapply(colMeans, var)
+        names(chunkColVar) <- paste0("var_", names(chunkColVar))
+        chunkColVar <- data.frame(chunkColVar)
         
         ## Skew
         chunkColSkew <- lapply(colMeans, skewness)
@@ -64,11 +64,11 @@ generateFeatures <- function(train, breaks=3) {
         
         data.frame(aspectRatio,
                    chunkRowMeans,
-                   chunkRowSd,
+                   chunkRowVar,
                    chunkRowSkew,
                    chunkRowKurt,
                    chunkColMeans,
-                   chunkColSd,
+                   chunkColVar,
                    chunkColSkew,
                    chunkColKurt)
     })
