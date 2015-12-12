@@ -5,23 +5,24 @@ source('model.R')
 # Parameters
 n_breaks <-4
 
-benchmark <- list()
+print("reading data")
+raw_train <- readData()
+label <- raw_train$label
 
-t <- proc.time()
-train <- readData()
-benchmark$readData <- proc.time() - t
+print("generating features")
+train <- generateFeatures(raw_train, n_breaks)
+train$label <- factor(label)
 
-data <- generateFeatures(train, n_breaks)
-benchmark$generateFeatures <- proc.time() - t
+plotSample(raw_train, 9)
 
 print("machine learning")
-model <- randomForest(label ~ ., data=data)
-benchmark$readData <- proc.time() - t
-wrong <- train[model$predict != data$label,]
-
-print("# Results")
-print(benchmark)
+model <- randomForest(label ~ ., data=train, ntree=1000)
 print(model)
 
-beep(4)
+print("predictions")
+test <- read.csv("data/test.csv")
+test <- generateFeatures(test, n_breaks)
+predictions <- predict(model, newdata=test)
+predictions <- data.frame(ImageId=1:nrow(test), Label=predictions)
 
+write.csv(predictions, "data/predictions.csv", row.names=FALSE) 

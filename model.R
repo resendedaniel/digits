@@ -1,9 +1,14 @@
-generateFeatures <- function(train, breaks=3) {
-    print(paste("generating features", "\n", "breaks: ", breaks))
-    n <- nrow(train)
+generateFeatures <- function(data, breaks=4) {
+    if("label" %in% names(data)) {
+        label <- data$label
+        data <- data[-1]
+    }
+    
+    n <- nrow(data)
     count <- 1
-    data <- apply(train, 1, function(row) {
+    data <- apply(data, 1, function(row) {
         matrix <- readImg(row)
+        matrix <- matrix / sum(matrix)
         chunks <- ceiling((1:28)/(28/breaks))
         
         rowMeans <- rowMeans(matrix)
@@ -74,7 +79,13 @@ generateFeatures <- function(train, breaks=3) {
     })
     data <- do.call(rbind, data)
     data[sapply(data, is.nan)] <- 0
-    data <- data.frame(label=factor(train$label), data)
+    if("label" %in% names(data)) {
+        data$label <- label
+    }
     
     data
+}
+
+generateModelDigit <- function(train) {
+    split()
 }
